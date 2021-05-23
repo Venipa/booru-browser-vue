@@ -1068,6 +1068,11 @@
     "@nodelib/fs.scandir" "2.1.4"
     fastq "^1.6.0"
 
+"@nopr3d/vue-next-rx@^1.0.7":
+  version "1.0.7"
+  resolved "https://registry.yarnpkg.com/@nopr3d/vue-next-rx/-/vue-next-rx-1.0.7.tgz#62889f2f322efd3a85bf415a57bf301f6fba10d8"
+  integrity sha512-HeBEUSXWA52vPYLatxMnhiEShmKHKJKkSfaWgLhDs9bf6o5NkonqeHxnDPcyr7mOAhaIWetcAuvw7iLyU2LxgA==
+
 "@npmcli/move-file@^1.0.1":
   version "1.1.2"
   resolved "https://registry.yarnpkg.com/@npmcli/move-file/-/move-file-1.1.2.tgz#1a82c3e372f7cae9253eb66d72543d6b8685c674"
@@ -5931,6 +5936,11 @@ immediate@~3.0.5:
   version "3.0.6"
   resolved "https://registry.yarnpkg.com/immediate/-/immediate-3.0.6.tgz#9db1dbd0faf8de6fbe0f5dd5e56bb606280de69b"
   integrity sha1-nbHb0Pr43m++D13V5Wu2BigN5ps=
+
+immer@^9.0.2:
+  version "9.0.2"
+  resolved "https://registry.yarnpkg.com/immer/-/immer-9.0.2.tgz#83e4593df9914acaecfd9fac6a8601ef44d883fc"
+  integrity sha512-mkcmzLtIfSp40vAqteRr1MbWNSoI7JE+/PB36FNPoSfJ9RQRmNKuTYCjKkyXyuq3Dgn07HuJBrwJd4ZSk2yUbw==
 
 import-cwd@^2.0.0:
   version "2.1.0"

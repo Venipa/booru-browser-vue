@@ -1,5 +1,5 @@
 {
-  "name": "danbooru-desktop",
+  "name": "booru-browser",
   "version": "0.1.0",
   "private": true,
   "scripts": {
@@ -14,12 +14,14 @@
     "@datorama/akita": "^6.1.3",
     "@headlessui/vue": "^1.2.0",
     "@heroicons/vue": "^1.0.1",
+    "@nopr3d/vue-next-rx": "^1.0.7",
     "@tailwindcss/forms": "^0.3.2",
     "@tailwindcss/postcss7-compat": "^2.0.2",
     "@tailwindcss/ui": "^0.7.2",
     "autoprefixer": "^9",
     "core-js": "^3.6.5",
     "dotenv": "^10.0.0",
+    "immer": "^9.0.2",
     "lodash-es": "^4.17.21",
     "postcss": "^7",
     "rxjs": "^7.1.0",

@@ -10,8 +10,8 @@
 <script>
 import Sidebar from "../../components/Sidebar";
 import Toolbar from "../../components/Toolbar";
-import DContent from "../../components/DanbooruContent";
-import DPosts from "../../components/DanbooruPosts";
+import DContent from "../../components/BooruContent";
+import DPosts from "../../components/BooruPosts";
 import { Options, Vue } from "vue-class-component";
 import DefaultLayout from "../layouts/default.vue";
 @Options({

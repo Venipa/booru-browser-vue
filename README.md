@@ -1,4 +1,4 @@
-# danbooru-browser
+# Booru-browser
 
 ## Project setup
 ```
