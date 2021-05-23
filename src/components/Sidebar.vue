@@ -35,7 +35,7 @@ export default {
 };
 </script>
 
-<style lang="scss" scoped>
+<style lang="scss">
 .sidebar {
   @apply bg-white bg-opacity-50 backdrop-filter backdrop-blur-sm;
   &-content {

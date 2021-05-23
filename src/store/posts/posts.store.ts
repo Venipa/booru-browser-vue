@@ -8,6 +8,7 @@ import {
 import { produce } from "immer";
 export interface BooruPostState extends EntityState {
   name: string;
+  source: string; // server id
 }
 
 @StoreConfig({

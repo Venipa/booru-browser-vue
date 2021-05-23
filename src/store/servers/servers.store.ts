@@ -1,32 +1,26 @@
 import {
   EntityState,
   EntityStore,
+  guid,
   QueryEntity,
   Store,
   StoreConfig,
 } from "@datorama/akita";
 import { produce } from "immer";
-export interface BooruServerState extends EntityState {
-  name: string;
-  url: string;
-  nsfw: boolean;
-  options: {
-    showNSFW: boolean;
-    filter: { [key: string]: any };
-  };
-  auth: {
-    login: string;
-    pass: string;
-  };
-}
+import { DEFAULT_SERVERS } from "./defaultServers";
+import { BooruServer } from "./servers.model";
+
+export interface BooruServerState extends EntityState<BooruServer> {}
 
 @StoreConfig({
   name: "servers",
   producerFn: produce,
+  idKey: "name",
 })
 export class BooruServerStore extends EntityStore<BooruServerState> {}
 
 export const booruServerStore = new BooruServerStore();
+booruServerStore.upsertMany(DEFAULT_SERVERS);
 
 export class BooruServerQuery extends QueryEntity<BooruServerState> {}
 

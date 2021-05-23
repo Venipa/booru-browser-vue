@@ -15,7 +15,7 @@ import { Options, Vue } from "vue-class-component";
 export default class extends Vue {}
 </script>
 
-<style lang="scss" scoped>
+<style lang="scss">
 .post-grid {
   @apply grid;
   grid-template-columns: 240px 1fr;

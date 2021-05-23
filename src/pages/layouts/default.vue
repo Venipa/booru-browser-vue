@@ -14,6 +14,3 @@ export default {
   components: { Toolbar },
 };
 </script>
-
-<style lang="scss" scoped>
-</style>

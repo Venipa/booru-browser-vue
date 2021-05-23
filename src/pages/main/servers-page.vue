@@ -8,7 +8,7 @@
           <div>{{s.url}}</div>
         </div>
         <div class="ml-auto flex flex-col justify-center">
-          <t-button class="button-icon button-dark button-icon-circle">
+          <t-button class="button-icon button-dark button-icon-circle" @click.stop="() => openServerDialog(s)">
             <PencilIcon></PencilIcon>
           </t-button>
         </div>
@@ -18,58 +18,34 @@
 </template>
 
 <script>
-import { ref } from "vue";
-// import { TransitionRoot, TransitionChild, Dialog, DialogOverlay, DialogTitle } from "@headlessui/vue";
+import { defineComponent, ref } from "vue";
 import { PencilIcon, CheckIcon as CheckCircleIcon } from "@heroicons/vue/solid";
 import TButton from "@/components/TButton";
-export default {
+export default defineComponent({
   components: {
     PencilIcon,
     CheckCircleIcon,
-    TButton,
-    //   TransitionRoot,
-    //   TransitionChild,
-    //   Dialog,
-    //   DialogOverlay,
-    //   DialogTitle,
+    TButton
   },
+  subscriptions() {
+    const servers = this.$akita.queries.serversQuery.selectAll(),
+    activeServer = this.$akita.queries.serversQuery.selectActive();
+    return {
+      servers,
+      activeServer
+    };
+  },
+  inject: ['openServerDialog'],
   setup() {
     const newServerModalOpen = ref(false),
-      editServerModalOpen = ref(false),
-      servers = ref([
-        {
-          name: "rule34",
-          url: "https://rule34.xxx",
-          filters: false,
-          nsfw: true,
-          active: true,
-        },
-        {
-          name: "danbooru",
-          url: "https://danbooru.donmai.us/",
-          filters: false,
-          nsfw: true,
-          active: false,
-        },
-        {
-          name: "safebooru",
-          url: "https://safebooru.org/",
-          filter: false,
-          nsfw: false,
-          active: false,
-        },
-      ]);
+      editServerModalOpen = ref(false)
     return {
       newServerModalOpen,
       toggleNewServerModalOpen: () => (newServerModalOpen.value = !newServerModalOpen.value),
 
       editServerModalOpen,
-      toggleEditServerModalOpen: () => (editServerModalOpen.value = !editServerModalOpen.value),
-      servers,
+      toggleEditServerModalOpen: () => (editServerModalOpen.value = !editServerModalOpen.value)
     };
   },
-};
+});
 </script>
-
-<style lang="scss" scoped>
-</style>

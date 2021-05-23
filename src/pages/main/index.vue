@@ -4,20 +4,28 @@
       <sidebar></sidebar>
       <router-view></router-view>
     </div>
+
+    <b-server-dialog ref="booruServerDialog"></b-server-dialog>
   </default-layout>
 </template>
 
-<script>
-import Sidebar from "../../components/Sidebar";
-import Toolbar from "../../components/Toolbar";
-import DContent from "../../components/BooruContent";
-import DPosts from "../../components/BooruPosts";
-import { Options, Vue } from "vue-class-component";
-import DefaultLayout from "../layouts/default.vue";
-@Options({
-  components: { DefaultLayout, Sidebar, Toolbar, DContent, DPosts },
-})
-export default class extends Vue {}
+<script lang="ts">
+import Sidebar from "@/components/Sidebar.vue";
+import DefaultLayout from "@/pages/layouts/default.vue";
+import BServerDialog from "@/components/BooruServerDialog.vue";
+import { defineComponent, ref } from "@vue/runtime-core";
+export default defineComponent({
+  components: { DefaultLayout, Sidebar, BServerDialog },
+  setup() {
+    const booruServerDialog = ref<any>(null);
+    return { booruServerDialog };
+  },
+  provide() {
+    return {
+      openServerDialog: (...args: any[]) => this.booruServerDialog?.open(...args),
+    };
+  },
+});
 </script>
 
 <style lang="scss">

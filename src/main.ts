@@ -5,7 +5,8 @@ import {
   createWebHashHistory,
 } from "vue-router";
 import App from "./App.vue";
-import "./assets/tailwind.css";
+import { createAkita } from "./store/createAkita";
+import VueRx from "@nopr3d/vue-next-rx";
 import "./assets/app.scss";
 const router = createRouter({
   history: process.env.IS_ELECTRON
@@ -44,6 +45,14 @@ const router = createRouter({
     },
   ],
 });
-createApp(App)
+const app = createApp(App)
   .use(router)
+  .use(VueRx)
+  .use((c) => {
+    c.config.globalProperties.$akita = createAkita();
+  })
   .mount("#app");
+
+if (process.env.NODE_ENV !== "production") {
+  console.log('Stores & Queries: ', app.$akita);
+}

@@ -1,5 +1,5 @@
 <template>
-  <div class="d-content"></div>
+  <div class="d-content">Content</div>
 </template>
 
 <script>

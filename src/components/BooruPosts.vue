@@ -1,5 +1,5 @@
 <template>
-  <div class="d-posts"></div>
+  <div class="d-posts">Posts</div>
 </template>
 
 <script>
