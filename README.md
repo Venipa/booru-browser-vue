@@ -1,6 +1,7 @@
 # Booru-browser (wip)
 
-![](https://i.mavis.moe/f/jgBuR8y61Q/electron-2021-05-29-02-44-18jpg.jpg)
+![image](https://user-images.githubusercontent.com/17952364/120053065-835bfa00-c028-11eb-95b8-e5c9acfd415f.png)
+
 
 ## Project setup
 ```
