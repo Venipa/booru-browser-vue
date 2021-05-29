@@ -1,23 +1,35 @@
 <template>
-  <div class="post-grid">
-    <d-posts></d-posts>
-    <d-content></d-content>
+  <div class="post-grid h-full overflow-hidden">
+    <d-posts :posts="posts"></d-posts>
+    <d-content :post="activePost"></d-content>
   </div>
 </template>
 
-<script>
+<script lang="ts">
+import { DanbooruHost } from "@/api/BooruInterface";
 import DContent from "@/components/BooruContent";
 import DPosts from "@/components/BooruPosts";
-import { Options, Vue } from "vue-class-component";
-@Options({
+import { defineComponent } from "@vue/runtime-core";
+import { EntityStore } from "node_modules/@datorama/akita";
+export default defineComponent({
   components: { DContent, DPosts },
-})
-export default class extends Vue {}
+  subscriptions() {
+    return {
+      posts: this.$akita.queries.postsQuery.selectAll(),
+      activePost: this.$akita.queries.postsQuery.selectActive(),
+    }
+  },
+  async mounted() {
+    const testBooru: DanbooruHost = this.$booru.safebooru as any;
+    const posts = await testBooru.get(1);
+    (this.$akita.stores as EntityStore<any>).posts.upsertMany(posts);
+  },
+});
 </script>
 
 <style lang="scss">
 .post-grid {
   @apply grid;
-  grid-template-columns: 240px 1fr;
+  grid-template-columns: minmax(320px, 480px) 1fr;
 }
 </style>
