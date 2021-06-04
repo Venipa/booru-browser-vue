@@ -5,24 +5,21 @@
   </div>
 </template>
 
-<script lang="ts">
-import { DanbooruHost } from "@/api/BooruInterface";
-import DContent from "@/components/BooruContent";
-import DPosts from "@/components/BooruPosts";
+<script>
+import DContent from "@/components/BooruContent.vue";
+import DPosts from "@/components/BooruPosts.vue";
 import { defineComponent } from "@vue/runtime-core";
-import { EntityStore } from "node_modules/@datorama/akita";
 export default defineComponent({
   components: { DContent, DPosts },
   subscriptions() {
     return {
       posts: this.$akita.queries.postsQuery.selectAll(),
       activePost: this.$akita.queries.postsQuery.selectActive(),
-    }
+    };
   },
   async mounted() {
-    const testBooru: DanbooruHost = this.$booru.safebooru as any;
-    const posts = await testBooru.get(1);
-    (this.$akita.stores as EntityStore<any>).posts.upsertMany(posts);
+    const posts = await this.$booru.active().get(1);
+    this.$akita.stores.posts.upsertMany(posts);
   },
 });
 </script>

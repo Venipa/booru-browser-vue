@@ -6,6 +6,7 @@ export const DEFAULT_SERVERS: BooruServer[] = [
     url: "https://safebooru.org/",
     meta: {
       readonly: true,
+      type: "danbooru_php",
     },
   },
   {
@@ -13,6 +14,7 @@ export const DEFAULT_SERVERS: BooruServer[] = [
     url: "https://danbooru.donmai.us/",
     meta: {
       readonly: true,
+      type: "danbooru_v2",
     },
   },
 ];

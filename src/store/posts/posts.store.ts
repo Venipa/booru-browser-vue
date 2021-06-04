@@ -7,13 +7,22 @@ import {
 } from "@datorama/akita";
 import { produce } from "immer";
 export interface BooruPostState extends EntityState {
-  name: string;
-  source: string; // server id
+  id: string;
+  height: number;
+  width: number;
+  hash: string;
+  score: number;
+  tags: string[];
+  image: string;
+  sample: string;
+  thumbnail: string;
+  source: string;
 }
 
 @StoreConfig({
   name: "posts",
   producerFn: produce,
+  idKey: "id",
 })
 export class BooruPostStore extends EntityStore<BooruPostState> {}
 

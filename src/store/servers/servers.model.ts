@@ -12,5 +12,6 @@ export interface BooruServer {
   };
   meta: {
     readonly: true;
+    type: string;
   };
 }

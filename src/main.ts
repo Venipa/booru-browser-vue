@@ -9,11 +9,12 @@ import { createAkita } from "./store/createAkita";
 import VueRx from "@nopr3d/vue-next-rx";
 import "./assets/app.scss";
 import axiosInstace from "./api/vue-axios/axiosInstace";
-import { Booru, installBooru } from "./api/BooruInterface";
 import { IpcRenderer } from "electron";
+import { installBooru } from "./api/BooruInterface";
 declare global {
   interface Window {
     ipcRenderer: IpcRenderer;
+    _vue_instance: any;
   }
 }
 const router = createRouter({
@@ -58,19 +59,16 @@ const app = createApp(App)
   .use(VueRx)
   .use((c) => {
     c.config.globalProperties.$akita = createAkita();
+    if (!c.config.globalProperties.$akita.queries.serversQuery.getActive())
+      c.config.globalProperties.$akita.stores.servers.setActive(
+        c.config.globalProperties.$akita.queries.serversQuery.getAll()[0].name
+      );
   })
   .use(axiosInstace)
   .use(installBooru)
-  .use((c) => {
-    const corsMapping = Object.values(
-      c.config.globalProperties?.$booru as { [key: string]: Booru }
-    )
-      .filter((x) => x.baseUrl)
-      .map((x) => x.baseUrl!);
-    window.ipcRenderer.send("cors:allow-booru", corsMapping);
-  })
   .mount("#app");
 
 if (process.env.NODE_ENV !== "production") {
   console.log("Stores & Queries: ", app.$akita);
+  window._vue_instance = app;
 }

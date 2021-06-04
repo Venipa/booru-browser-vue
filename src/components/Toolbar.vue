@@ -9,17 +9,17 @@
   </div>
 </template>
 
-<script lang="ts">
-import TButton from "@/components/TButton";
+<script>
+import TButton from "@/components/TButton.vue";
 import { XIcon } from "@heroicons/vue/solid";
 import { defineComponent } from "@vue/runtime-core";
 export default defineComponent({
   components: { TButton, XIcon },
   methods: {
     close() {
-      window.ipcRenderer.send('app.quit');
-    }
-  }
+      window.ipcRenderer.send("app.quit");
+    },
+  },
 });
 </script>
 

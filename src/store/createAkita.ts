@@ -1,11 +1,11 @@
-import { Query, Store } from "@datorama/akita";
+import { EntityStore, Query, Store } from "@datorama/akita";
 import * as stores from ".";
 
 declare module "@vue/runtime-core" {
   interface ComponentCustomProperties {
     $akita: {
       queries: { [key: string]: Query<any> };
-      stores: { [key: string]: Store<any> };
+      stores: { [key: string]: EntityStore<any> | Store<any> };
     };
   }
 }

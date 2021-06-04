@@ -7,6 +7,7 @@ import {
   ipcMain,
   ipcRenderer,
   session,
+  Filter,
 } from "electron";
 import { createProtocol } from "vue-cli-plugin-electron-builder/lib";
 import installExtension, { VUEJS_DEVTOOLS } from "electron-devtools-installer";
@@ -48,6 +49,40 @@ async function createWindow() {
     // Load the index.html when not in development
     win.loadURL("app://./index.html");
   }
+
+  ipcMain.on("cors:allow-booru", (ev, ...[mapping]: [string[]]) => {
+    const corsFilter: Filter = {
+      urls: [...mapping.map((x) => `${x.replace(/\/$/, "")}/*`)],
+    };
+    console.log(corsFilter.urls);
+    win.webContents.session.webRequest.onBeforeSendHeaders(
+      corsFilter,
+      (details, callback) => {
+        const uri = new URL(details.url);
+        if (
+          uri &&
+          uri.origin &&
+          mapping.findIndex((x) => x.match(uri.origin)) !== -1
+        ) {
+          details.requestHeaders["origin"] = `${uri.origin}`;
+          details.requestHeaders["referer"] = `${uri.origin}/`;
+        }
+        details.requestHeaders[
+          "User-Agent"
+        ] = `Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:73.0) Gecko/20100101 Firefox/73.0 BooruDesktop/${appVersion}`;
+        callback({ requestHeaders: details.requestHeaders });
+      }
+    );
+    win.webContents.session.webRequest.onHeadersReceived(
+      corsFilter,
+      (details, callback) => {
+        if (details.responseHeaders)
+          details.responseHeaders["Access-Control-Allow-Origin"] = ["*"];
+        callback({ responseHeaders: details.responseHeaders });
+      }
+    );
+  });
+  return win;
 }
 
 // Quit when all windows are closed.
@@ -94,42 +129,9 @@ if (isDevelopment) {
     });
   }
 }
-ipcMain.on("cors:allow-booru", (ev, ...[mapping]: [string[]]) => {
-  console.log(mapping);
-  const corsFilter = {
-    urls: [...mapping.map((x) => `${x.replace(/\/$/, "")}/*`)],
-  };
-  session.defaultSession.webRequest.onBeforeSendHeaders(
-    corsFilter,
-    (details, callback) => {
-      const uri = new URL(details.url);
-      if (
-        uri &&
-        uri.origin &&
-        mapping.findIndex((x) => x.match(uri.origin)) !== -1
-      ) {
-        details.requestHeaders["origin"] = `${uri.origin}`;
-        details.requestHeaders["referer"] = `${uri.origin}/`;
-      }
-      details.requestHeaders[
-        "User-Agent"
-      ] = `Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:73.0) Gecko/20100101 Firefox/73.0 BooruDesktop/${appVersion}`;
-      callback({ requestHeaders: details.requestHeaders });
-    }
-  );
-  session.defaultSession.webRequest.onHeadersReceived(
-    corsFilter,
-    (details, callback) => {
-      if (details.responseHeaders)
-        details.responseHeaders["Access-Control-Allow-Origin"] = ["*"];
-      callback({ responseHeaders: details.responseHeaders });
-    }
-  );
-});
-
 
 ipcMain.on("app.quit", (ev) => {
   console.log("quit");
-  BrowserWindow.getAllWindows().forEach(x => x.close());
+  BrowserWindow.getAllWindows().forEach((x) => x.close());
   app.quit();
 });
