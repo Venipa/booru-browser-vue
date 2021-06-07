@@ -5,7 +5,7 @@ const path = require('path');
  */
  const electronBuilder = {
   chainWebpackMainProcess: (config) => {},
-  mainProcessTypeChecking: false,
+  mainProcessTypeChecking: true,
   preload: 'src/preload.js',
   nodeIntegration: false,
   nodeModulesPath: ["./node_modules"],

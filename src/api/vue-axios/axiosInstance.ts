@@ -1,10 +1,6 @@
-import Axios, {
-  AxiosInstance,
-  AxiosRequestConfig,
-  AxiosResponse
-} from "axios";
+import Axios, { AxiosInstance, AxiosRequestConfig, AxiosResponse } from "axios";
 import defu from "defu";
-import { App } from "vue";
+import { App, transformVNodeArgs } from "vue";
 import { VueAxiosInstance } from "./axios-typings";
 
 // @ts-ignore
@@ -63,10 +59,12 @@ for (const method of [
   "patch",
 ]) {
   (axiosExtra as any)["$" + method] = function(...args: any[]) {
-    return this[method].apply(this, args).then((res: AxiosResponse<any>) => res && res.data); // eslint-disable-line prefer-spread
+    // eslint-disable-next-line prefer-spread
+    return this[method]
+      .apply(this, args)
+      .then((res: AxiosResponse<any>) => res && res.data); // eslint-disable-line prefer-spread
   };
 }
-
 
 const extendAxiosInstance = (axios: AxiosInstance) => {
   for (const key in axiosExtra) {
@@ -87,6 +85,40 @@ export const createAxiosInstance = (axiosOptions?: AxiosRequestConfig) => {
   });
 
   return axios;
+};
+export const createAxiosIpcInstance = (options?: AxiosRequestConfig) => {
+  const client = createAxiosInstance(options);
+  client.interceptors.request.use(
+    (_requestOptions: AxiosRequestConfig) => {
+      return window.ipcRenderer
+        .invoke("http-req", {
+          baseURL: _requestOptions.baseURL,
+          data: _requestOptions.data,
+          headers: _requestOptions.headers,
+          method: _requestOptions.method,
+          params: _requestOptions.params,
+          url: _requestOptions.url,
+        })
+        .then((d) => {
+          console.log('axiosIPC:', d);
+          throw { data: d };
+        });
+    },
+    (err) => {
+      return err?.data ? Promise.resolve(err.data) : Promise.reject(err);
+    }
+  );
+  client.interceptors.response.use(
+    (response) => {
+      return response;
+    },
+    (err) => {
+      return err?.data
+        ? Promise.resolve(err) // <- sends as successful response
+        : Promise.reject(err);
+    }
+  );
+  return client;
 };
 
 export default {

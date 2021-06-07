@@ -1,6 +1,8 @@
-import { BooruPostState } from "@/store/posts/posts.store";
+import { BooruPostQuery, BooruPostState } from "@/store/posts/posts.store";
 import { BooruServer } from "@/store/servers/servers.model";
-import { filter } from "rxjs/operators";
+import { BooruServerQuery } from "@/store/servers/servers.store";
+import { Observable } from "rxjs";
+import { filter, map, startWith } from "rxjs/operators";
 import { App, ComponentCustomProperties, Plugin } from "vue";
 import { Booru, BooruContext, BooruHttp } from "./booru/Booru";
 import { DanbooruHostV2 } from "./booru/DanbooruOriginal";
@@ -28,11 +30,26 @@ export const installBooru: Plugin = {
       debug: boolean;
     }>
   ) {
-    app.config.globalProperties.$akita.queries.serversQuery.selectAll().subscribe((configs: BooruServer[]) => {
-      window.ipcRenderer.send("cors:allow-booru", configs.map(x => new URL(x.url)?.origin).filter(x => !!x));
-    })
-    app.config.globalProperties.$akita.queries.serversQuery
-      .selectActive()
+    // @ts-ignore
+    const serversQuery: BooruServerQuery = app.config.globalProperties.$akita.getEntityQuery<
+      BooruServerQuery
+    >("serversQuery");
+    // @ts-ignore
+    const postsQuery: BooruPostQuery = app.config.globalProperties.$akita.getEntityQuery<
+      BooruPostQuery
+    >("postsQuery");
+    app.config.globalProperties.$booru = {
+      _instances: {},
+      active() {
+        const config = serversQuery.getActive() as BooruServer;
+        return app.config.globalProperties.$booru["_instances"][
+          config.name
+        ] as BooruHttp;
+      },
+    } as any;
+    serversQuery._store.setActive(localStorage.activeBooru);
+    (serversQuery
+      .selectActive() as Observable<BooruServer>)
       .pipe(
         filter(
           (config: BooruServer) =>
@@ -59,15 +76,7 @@ export const installBooru: Plugin = {
 
         const booru = useBooru(booruInstance)(app);
         app.config.globalProperties.$booru["_instances"][config.name] = booru;
+        postsQuery._store.remove();
       });
-    app.config.globalProperties.$booru = {
-      _instances: {},
-      active() {
-        const config: BooruServer = app.config.globalProperties.$akita.queries.serversQuery.getActive();
-        return app.config.globalProperties.$booru["_instances"][
-          config.name
-        ] as BooruHttp;
-      },
-    } as any;
   },
 };

@@ -23,7 +23,7 @@ export class DanbooruHostPHP extends Booru {
       })
       .then((x) => {
         if (x?.length > 0) {
-          return x.map(
+          return x.filter(x => x?.id).map(
             ({
               id,
               height,
@@ -33,6 +33,7 @@ export class DanbooruHostPHP extends Booru {
               score,
               tags,
               image,
+              rating
             }: any) => {
               const next: any = {
                 id,
@@ -43,6 +44,7 @@ export class DanbooruHostPHP extends Booru {
                 score,
                 tags: tags?.split(" "),
                 image,
+                rating
               };
               next.imageId = image.match(/^(.*)\./)[1];
               if (next.imageId) {

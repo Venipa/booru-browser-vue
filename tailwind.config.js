@@ -50,6 +50,7 @@ module.exports = {
       spacing: {
         "post-image": "calc(100vh - 8rem)",
         toolbar: "calc(3.25rem + 1px)",
+        container: "768px"
       },
       transitionDuration: {
         hover: "50ms",

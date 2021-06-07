@@ -1,7 +1,7 @@
 <template>
   <div class="d-posts" v-if="posts">
     <div class="d-posts-content">
-      <div class="bg-black bg-opacity-50 text-white flex w-full items-center gap-2 px-2 py-3 cursor-pointer hover:bg-opacity-70" v-for="p in posts" :key="p.id" :class="{ 'bg-purple-800': selectedPostId === p.id }" @click="() => selectPost(p.id)">
+      <div class="bg-black bg-opacity-50 text-white flex w-full items-center gap-2 px-2 py-3 cursor-pointer hover:bg-opacity-70" v-for="p of posts" :key="p.id" :class="{ 'bg-purple-800': selectedPostId === p.id }" @click="() => selectPost(p.id)">
         <div class="flex">
           <img v-if="hasThumbnail" class="w-24 h-24 rounded object-cover" :class="{ 'filter-blur': !isSafeRating(p.rating) }" :src="p.thumbnail" @error="hasThumbnail = false" alt="Thumbnail">
           <div v-else class="w-24 h-24 bg-white rounded"></div>
@@ -24,14 +24,15 @@
 </template>
 
 <script lang="ts">
-import { defineComponent } from "@vue/runtime-core";
+import { defineComponent, PropType } from "@vue/runtime-core";
 import { EntityStore } from "node_modules/@datorama/akita";
 import { map } from "rxjs/operators";
+import { BooruPostState } from "@/store";
 export default defineComponent({
   props: {
     posts: {
-      type: Array,
-      default: () => null,
+      type: Array as PropType<BooruPostState[]>,
+      default: () => [],
     },
   },
   subscriptions() {

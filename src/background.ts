@@ -1,5 +1,3 @@
-"use strict";
-
 import {
   app,
   protocol,
@@ -8,10 +6,13 @@ import {
   ipcRenderer,
   session,
   Filter,
+  IpcMainEvent,
 } from "electron";
 import { createProtocol } from "vue-cli-plugin-electron-builder/lib";
 import installExtension, { VUEJS_DEVTOOLS } from "electron-devtools-installer";
 import { resolve } from "path";
+import { createAxiosInstance } from "./api/vue-axios/axiosInstance";
+import { AxiosRequestConfig } from "axios";
 const isDevelopment = process.env.NODE_ENV !== "production";
 
 const appVersion = app.getVersion();
@@ -50,38 +51,6 @@ async function createWindow() {
     win.loadURL("app://./index.html");
   }
 
-  ipcMain.on("cors:allow-booru", (ev, ...[mapping]: [string[]]) => {
-    const corsFilter: Filter = {
-      urls: [...mapping.map((x) => `${x.replace(/\/$/, "")}/*`)],
-    };
-    console.log(corsFilter.urls);
-    win.webContents.session.webRequest.onBeforeSendHeaders(
-      corsFilter,
-      (details, callback) => {
-        const uri = new URL(details.url);
-        if (
-          uri &&
-          uri.origin &&
-          mapping.findIndex((x) => x.match(uri.origin)) !== -1
-        ) {
-          details.requestHeaders["origin"] = `${uri.origin}`;
-          details.requestHeaders["referer"] = `${uri.origin}/`;
-        }
-        details.requestHeaders[
-          "User-Agent"
-        ] = `Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:73.0) Gecko/20100101 Firefox/73.0 BooruDesktop/${appVersion}`;
-        callback({ requestHeaders: details.requestHeaders });
-      }
-    );
-    win.webContents.session.webRequest.onHeadersReceived(
-      corsFilter,
-      (details, callback) => {
-        if (details.responseHeaders)
-          details.responseHeaders["Access-Control-Allow-Origin"] = ["*"];
-        callback({ responseHeaders: details.responseHeaders });
-      }
-    );
-  });
   return win;
 }
 
@@ -113,6 +82,7 @@ app.on("ready", async () => {
     }
   }
   createWindow();
+  ipcMain.emit("cors:allow-booru", []);
 });
 
 // Exit cleanly on request from parent process in development mode.
@@ -134,4 +104,25 @@ ipcMain.on("app.quit", (ev) => {
   console.log("quit");
   BrowserWindow.getAllWindows().forEach((x) => x.close());
   app.quit();
+});
+
+ipcMain.handle("http-req", (ev: IpcMainEvent, options: AxiosRequestConfig) => {
+  const http = createAxiosInstance(options);
+  http.onResponse((r) => {
+    console.log(
+      `http-req: ${r.config.url}\nResponse:\n${JSON.stringify(r.data).substring(
+        0,
+        512
+      )}\nData:\n${JSON.stringify(r.config.data)}\nParams:\n${JSON.stringify(r.config.params)}`
+    );
+  });
+  http.onResponseError((r) => {
+    console.log(
+      `http-req-error: ${r.config.url}\nCode:${
+        r.code
+      }\nMessage:\n${JSON.stringify(r.message)}\nStack:\n${r.stack}`
+    );
+  });
+  // @ts-ignore
+  return http.$request(options);
 });

@@ -16,6 +16,7 @@ export interface BooruPostState extends EntityState {
   image: string;
   sample: string;
   thumbnail: string;
+  rating: string;
   source: string;
 }
 
@@ -28,6 +29,14 @@ export class BooruPostStore extends EntityStore<BooruPostState> {}
 
 export const booruPostStore = new BooruPostStore();
 
-export class BooruPostQuery extends QueryEntity<BooruPostState> {}
+export class BooruPostQuery extends QueryEntity<BooruPostState> {
+  // @ts-ignore
+  get _store() {
+    return this.__store__ as BooruPostStore;
+  }
+  constructor(store: BooruPostStore) {
+    super(store);
+  }
+}
 
 export const booruPostQuery = new BooruPostQuery(booruPostStore);

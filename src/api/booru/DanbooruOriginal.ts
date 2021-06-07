@@ -17,7 +17,7 @@ export class DanbooruHostV2 extends Booru {
       })
       .then((x) => {
         if (x?.length > 0) {
-          return x.map(
+          return x.filter(x => x?.id).map(
             ({
               id,
               image_height: height,
@@ -27,7 +27,8 @@ export class DanbooruHostV2 extends Booru {
               tags_string: tags,
               file_url: image,
               large_file_url: sample,
-              preview_file_url: thumbnail
+              preview_file_url: thumbnail,
+              rating
             }: any) => {
               const next: BooruPostState = {
                 id,
@@ -36,6 +37,9 @@ export class DanbooruHostV2 extends Booru {
                 hash,
                 score,
                 tags: tags?.split(" "),
+                rating: {
+                  s: "safe"
+                }[rating] || `${rating}`,
                 image,
                 sample,
                 thumbnail,

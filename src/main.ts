@@ -8,9 +8,14 @@ import App from "./App.vue";
 import { createAkita } from "./store/createAkita";
 import VueRx from "@nopr3d/vue-next-rx";
 import "./assets/app.scss";
-import axiosInstace from "./api/vue-axios/axiosInstace";
+import axiosInstace from "./api/vue-axios/axiosInstance";
 import { IpcRenderer } from "electron";
 import { installBooru } from "./api/BooruInterface";
+import { QueryEntity } from "@datorama/akita";
+import {
+  BooruServerQuery,
+  BooruServerStore,
+} from "./store/servers/servers.store";
 declare global {
   interface Window {
     ipcRenderer: IpcRenderer;
@@ -58,11 +63,13 @@ const app = createApp(App)
   .use(router)
   .use(VueRx)
   .use((c) => {
-    c.config.globalProperties.$akita = createAkita();
-    if (!c.config.globalProperties.$akita.queries.serversQuery.getActive())
-      c.config.globalProperties.$akita.stores.servers.setActive(
-        c.config.globalProperties.$akita.queries.serversQuery.getAll()[0].name
-      );
+    const akita = createAkita(true);
+    c.config.globalProperties.$akita = akita;
+    const serversQuery = akita.getEntityQuery<BooruServerQuery>("serversQuery"),
+      serversStore = akita.getEntityStore<BooruServerStore>("servers");
+    if (!serversQuery.getActive())
+      serversStore.setActive(serversQuery.getAll()[0].name);
+    localStorage.activeBooru = serversQuery.getActiveId();
   })
   .use(axiosInstace)
   .use(installBooru)

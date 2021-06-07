@@ -1,36 +1,42 @@
 .button,
 .btn {
-  @apply inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-gray-800 bg-gray-700 bg-opacity-5 transition duration-100 ease-out flex items-center;
+  @apply px-4 h-10 border border-transparent text-sm font-medium rounded-md text-gray-800 bg-gray-700 bg-opacity-5 transition duration-100 ease-out flex items-center leading-none;
   &:hover {
     @apply bg-indigo-300 bg-opacity-60;
   }
-  &:focus,
-  &:hover:focus {
+  &:focus:not(.active),
+  &:hover:focus:not(.active) {
     @apply ring-indigo-600 ring-opacity-50 bg-indigo-300 bg-opacity-50 outline-none ring-2;
   }
+  &.active {
+    @apply bg-indigo-300 bg-opacity-50 outline-none ring-0;
+  }
   svg {
-    @apply h-5 w-5 -mt-px;
+    @apply h-5 w-5;
   }
   &-xs {
-    @apply px-2.5 py-1.5 text-xs font-medium rounded;
+    @apply px-2 h-6 text-xs font-medium rounded;
     svg {
       @apply h-4 w-4;
     }
   }
   &-sm {
-    @apply px-3 py-2 text-sm leading-4;
+    @apply px-2.5 h-7 text-sm;
+    svg {
+      @apply h-4 w-4;
+    }
   }
   &-lg {
     svg {
       @apply h-6 w-6;
     }
-    @apply px-4 py-2 text-base font-medium;
+    @apply px-3.5 h-8 text-base font-medium;
   }
   &-xl {
     svg {
       @apply h-8 w-8;
     }
-    @apply px-6 py-3 text-base font-medium;
+    @apply px-5 h-10 text-base font-medium;
   }
   &-dark {
     @apply bg-transparent bg-opacity-0 text-white text-opacity-90;

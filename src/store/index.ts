@@ -1,3 +1,2 @@
-export { booruServerQuery, booruServerStore } from "./servers/servers.store";
-export { booruPostQuery, booruPostStore } from "./posts/posts.store";
-
+export { booruServerQuery, booruServerStore, BooruServerState } from "./servers/servers.store";
+export { booruPostQuery, booruPostStore, BooruPostState } from "./posts/posts.store";

@@ -55,11 +55,14 @@
     "node-gyp": "^8.0.0",
     "sass": "^1.32.8",
     "sass-loader": "^10",
-    "typescript": "~4.1.5",
+    "typescript": "~4.3.0",
     "vue-cli-plugin-electron-builder": "~2.0.0",
     "vue-cli-plugin-tailwind": "~2.0.6"
   },
-  "resolutions": {},
+  "resolutions": {
+    "typescript": "~4.3.0",
+    "terser-webpack-plugin": "^4.2.3"
+  },
   "eslintConfig": {
     "root": true,
     "env": {
